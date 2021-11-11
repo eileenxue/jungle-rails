@@ -1,5 +1,8 @@
 <section class="cart-show">
 
+  <%# If cart has item show the cart and checkout, otherwise show an alert message %>
+  <% if enhanced_cart.count > 0 %>
+
   <header class="page-header">
     <h1>My Cart</h1>
   </header>
@@ -48,5 +51,14 @@
       <% end %>
     </div>
   </div>
+
+  <% else %>
+
+  <div class="alert alert-warning text-center">
+    <p>Your cart is empty</p>
+    <a href="/">Go back to homepage</a>
+  </div>
+
+  <% end %>
 
 </section>
