@@ -9,5 +9,5 @@
 <%# Display a count of how many categories are in the database %>
 <section class="jumbotron">
   <p>There are <%= @category_total %> categories in your shop. </p>
-  <%# link_to 'All Categories', [:admin, :categories], class: 'btn btn-primary' %>
+  <%= link_to 'All Categories', [:admin, :categories], class: 'btn btn-primary' %>
 </section>
