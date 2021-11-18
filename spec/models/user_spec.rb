@@ -9,8 +9,8 @@ RSpec.describe User, type: :model do
         first_name: 'First',
         last_name: 'Last',
         email: 'test@email.com',
-        password: 'pwd',
-        password_confirmation: 'pwd'
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
       )
       expect(@user).to be_valid
     end
@@ -21,8 +21,8 @@ RSpec.describe User, type: :model do
         first_name: nil,
         last_name: 'Last',
         email: 'test@email.com',
-        password: 'pwd',
-        password_confirmation: 'pwd'
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
       )
       expect(@user).to_not be_valid
     end
@@ -33,8 +33,8 @@ RSpec.describe User, type: :model do
         first_name: 'First',
         last_name: nil,
         email: 'test@email.com',
-        password: 'pwd',
-        password_confirmation: 'pwd'
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
       )
       expect(@user).to_not be_valid
     end
@@ -45,8 +45,8 @@ RSpec.describe User, type: :model do
         first_name: 'First',
         last_name: 'Last',
         email: nil,
-        password: 'pwd',
-        password_confirmation: 'pwd'
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
       )
       expect(@user).to_not be_valid
     end
@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
         last_name: 'Last',
         email: 'test@email.com',
         password: nil,
-        password_confirmation: 'pwd'
+        password_confirmation: 'supercoolpassword'
       )
       expect(@user).to_not be_valid
     end
@@ -69,7 +69,7 @@ RSpec.describe User, type: :model do
         first_name: 'First',
         last_name: 'Last',
         email: 'test@email.com',
-        password: 'pwd',
+        password: 'supercoolpassword',
         password_confirmation: nil
       )
       expect(@user).to_not be_valid
@@ -81,14 +81,46 @@ RSpec.describe User, type: :model do
         first_name: 'First',
         last_name: 'Last',
         email: 'test@email.com',
-        password: 'pwd',
-        password_confirmation: 'haha'
+        password: 'supercoolpassword',
+        password_confirmation: 'badpassword'
       )
       expect(@user).to_not be_valid
     end
 
-    #7. The email should be unique (but not case-sensitive) otherwise it's invalid
+    #7. Validates that the email should be unique (but not case-sensitive)
+    it 'should not be valid if new user with same email is created' do
+      @user = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'test@email.com',
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
+      )
 
-    #8. Validates that the password meet the minimum length
+      @user.save
+
+      @userTwo = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'TEST@email.com',
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
+      )
+      expect(@user).to be_valid
+      expect(@userTwo).to_not be_valid
+      expect(@userTwo.errors.full_messages).to eq ["Email has already been taken"]
+    end
+
+    #8. Validates that the password meet the minimum length of 10 characters 
+    it 'should not be valid if password is less than 10 characters' do
+      @user = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'test@email.com',
+        password: 'pwd',
+        password_confirmation: 'pwd'
+      )
+      expect(@user).to_not be_valid
+    end
   end
 end
