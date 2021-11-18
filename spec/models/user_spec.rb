@@ -123,4 +123,51 @@ RSpec.describe User, type: :model do
       expect(@user).to_not be_valid
     end
   end
+
+  # Authentication
+  describe '.authenticate_with_credentials' do
+    # User should be able to login 
+    it 'should be able to create new user and also login' do
+      @user = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'test@email.com',
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
+      )
+      @user.save
+
+      loginUser = User.authenticate_with_credentials("test@email.com", "supercoolpassword")
+      expect(loginUser.email).to eq "test@email.com"
+    end
+
+    # Edge case: Able to log in with spaces before/after email
+    it 'should be able to login with whitespaces around the email' do
+      @user = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'test@email.com',
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
+      )
+      @user.save
+
+      loginUser = User.authenticate_with_credentials("   test@email.com  ", "supercoolpassword")
+      expect(loginUser.email).to eq "test@email.com"
+    end
+    # Edge case: Not case-sensitive for email when logging in
+    it 'should be able to login with randomly cased email' do
+      @user = User.new(
+        first_name: 'First',
+        last_name: 'Last',
+        email: 'test@email.com',
+        password: 'supercoolpassword',
+        password_confirmation: 'supercoolpassword'
+      )
+      @user.save
+
+      loginUser = User.authenticate_with_credentials("TEsT@eMail.com", "supercoolpassword")
+      expect(loginUser.email).to eq "test@email.com"
+    end
+  end
 end
